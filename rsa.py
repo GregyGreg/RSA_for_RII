@@ -7,8 +7,7 @@ import sympy
 # Далее находим модуль seed (нужен в дальнейшем для шифрования)
 # Создаем закрытый ключ, для этого находим функцию Эйлера
 # и взаимно простое число с seed.
-# Находим открытый ключ, который находится из формулы
-# (publicKey * privateKey) mod seed = 1
+# Находим открытый ключ, который находится из алгоритма Евклида
 # Функция возвращает массив из открытого ключа и закрытого ключа.
 # В свою очередь ключ состоит из самого ключа и модуля seed.
 def generateKey():
@@ -17,7 +16,7 @@ def generateKey():
     seed = firstSimpleNumb * secondSimpleNumb
     functionEuler = (firstSimpleNumb - 1) * (secondSimpleNumb - 1)
     privateKey = [simplyTwoNum(functionEuler), seed]
-    publicKey = [int(((seed ** 2) + 1) / privateKey[0]), seed]
+    publicKey = [gcd_rem_division(privateKey[0], seed), seed]
 
     return [publicKey, privateKey]
 
@@ -34,6 +33,15 @@ def generateSimpleNumb(minRange, maxRange):
         randSimpleNumb = random.randint(minRange, maxRange)
     else:
         return randSimpleNumb
+
+
+def gcd_rem_division(num1, num2):
+    while num1 != 1 and num2 != 1:
+        if num1 >= num2:
+            num1 %= num2
+        else:
+            num2 %= num1
+    return num1 or num2
 
 
 # Функция для нахождения взаимно простых чисел.
